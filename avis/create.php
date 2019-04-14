@@ -14,12 +14,11 @@ include_once '../objects/avis.php';
 
 $database = new Database();
 $db = $database->getConnection();
-
+$msg="message";
 $avis = new Avis($db);
 
 // get posted data
 $data = json_decode(file_get_contents("php://input"));// make sure data is not empty
-// echo json_encode(array("message" => $data));
 if(
     !empty($data->name) &&
     !empty($data->description)
@@ -37,7 +36,7 @@ if(
         http_response_code(201);
 
         // tell the user
-        echo json_encode(array("message" => "Avis was created."));
+        echo json_encode(array($msg => "Avis was created."));
     }
 
     // if unable to create the avis, tell the user
@@ -47,7 +46,7 @@ if(
         http_response_code(503);
 
         // tell the user
-        echo json_encode(array("message" => "Unable to create avis."));
+        echo json_encode(array($msg => "Unable to create avis."));
     }
 }
 
@@ -58,6 +57,6 @@ else{
     http_response_code(400);
 
     // tell the user
-    echo json_encode(array("message" => "Unable to create avis. Data is incomplete."));
+    echo json_encode(array($msg => "Unable to create avis. Data is incomplete."));
 }
 ?>

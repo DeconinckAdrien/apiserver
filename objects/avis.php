@@ -3,7 +3,7 @@ class Avis{
 
     // database connection and table name
     private $conn;
-    private $table_name = "avis";
+
 
     // object properties
     public $name;
@@ -11,6 +11,7 @@ class Avis{
     public $created;
     public $avis_id;
     public $modified;
+    public $desc='description';
 
     // constructor with $db as database connection
     public function __construct($db){
@@ -22,20 +23,19 @@ class Avis{
 
          $stmt = $this->conn->prepare("SELECT * FROM avis");
          $stmt->execute();
-        // $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $stmt;
     }
     // create product
+
     function create(){
-      // sanitize
           $this->name=htmlspecialchars(strip_tags($this->name));
           $this->description=htmlspecialchars(strip_tags($this->description));
           $this->created=htmlspecialchars(strip_tags($this->created));
 
       $data = [
           'name' => $this->name,
-          'description' => $this->description,
+          $this->desc => $this->description,
           'created' => $this->created,
       ];
       $sql = "INSERT INTO avis (name, description, created) VALUES (:name, :description, :created)";
@@ -78,25 +78,19 @@ function readOne(){
 
 function readLast(){
 
-  // sanitize
-  // $this->name=htmlspecialchars(strip_tags($this->name));
-  // $this->description=htmlspecialchars(strip_tags($this->description));
-  // $this->avis_id=htmlspecialchars(strip_tags($this->avis_id));
-  // $this->created=htmlspecialchars(strip_tags($this->created));
-
 
   $stmt = $this->conn->prepare("SELECT * FROM avis where avis_id in (SELECT MAX(avis_id) from avis)");
   $stmt->execute();
 
     // get retrieved row
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-     // echo json_encode(array("message" => "Avis does not exist."));
 
 
 
     // set values to object properties
-    $this->name = "s";
-    $this->description = $row['description'];
+    //$desc='description';
+    $this->name = $row['name'];
+    $this->description = $row[$this->desc];
     $this->avis_id = $row['avis_id'];
     $this->created=$row['created'];
     $this->modified=$row['modified'];
@@ -107,24 +101,14 @@ function readLast(){
 function update(){
 
 
-    // // sanitize
-    // $this->name=htmlspecialchars(strip_tags($this->name));
-    // $this->description=htmlspecialchars(strip_tags($this->description));
-    // $this->id=htmlspecialchars(strip_tags($this->id));
-    // echo json_encode(array("message" => $this->description));
-    // echo json_encode(array("message" => $this->name));
-    // echo json_encode(array("message" => $this->avis_id));
-
     // update query
     $stmt = $this->conn->prepare("UPDATE avis SET name = :name, description = :description WHERE avis_id = :id");
     $exec=$stmt->execute(array(
       'id' => $this->avis_id,
-      'description' => $this->description,
+      $this->desc => $this->description,
       'name'=> $this->name
     ));
 
-    // prepare query statement
-    // $stmt = $this->conn->prepare($query);
 
     // execute the query
     if($exec){
@@ -136,8 +120,6 @@ function update(){
 
 // delete the product
 function delete(){
-    // sanitize
-    // $this->id=htmlspecialchars(strip_tags($this->id));
 
     // delete query
     $stmt = $this->conn->prepare("DELETE FROM avis WHERE avis_id = :id");
@@ -166,22 +148,7 @@ $keywords = "%{$keywords}%";
     $stmt->execute(array(
       's' =>$keywords,
     ));
-
-    // prepare query statement
-    // $stmt = $this->conn->prepare($query);
-    //
-    // // sanitize
-    // $keywords=htmlspecialchars(strip_tags($keywords));
      $keywords = "%{$keywords}%";
-    //
-    // // bind
-    // $stmt->bindParam(1, $keywords);
-    // $stmt->bindParam(2, $keywords);
-    // $stmt->bindParam(3, $keywords);
-
-    // execute query
-    // $stmt->execute();
-
     return $stmt;
 }
 
