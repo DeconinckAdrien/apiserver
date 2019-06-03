@@ -39,9 +39,7 @@ class Notification{
 		$notification = array();
 		$notification['title'] = $this->title;
 		$notification['message'] = $this->message;
-		// $notification['image'] = $this->image_url;
-		// $notification['action'] = $this->action;
-		// $notification['action_destination'] = $this->action_destination;
+
 		return $notification;
 	}
 }

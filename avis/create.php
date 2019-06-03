@@ -1,15 +1,14 @@
 <?php
-// required headers
+// en-têtes nécessaires
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-// get database connection
+// récupérer la connexion à la base de données
 include_once '../config/database.php';
 
-// instantiate avis object
 include_once '../objects/avis.php';
 
 $database = new Database();
@@ -17,46 +16,46 @@ $db = $database->getConnection();
 $msg="message";
 $avis = new Avis($db);
 
-// get posted data
-$data = json_decode(file_get_contents("php://input"));// make sure data is not empty
+// récupérer les données postées
+$data = json_decode(file_get_contents("php://input"));
 if(
     !empty($data->name) &&
     !empty($data->description)
 ){
 
-    // set avis property values
+    // donner les valeurs aux propriétés de l'avis
     $avis->name = $data->name;
     $avis->description = $data->description;
     $avis->created = date('Y-m-d H:i:s');
 
-    // create the avis
+    // créer l'avis
     if($avis->create()){
 
-        // set response code - 201 created
+        // code 201 si avis créé
         http_response_code(201);
 
-        // tell the user
-        echo json_encode(array($msg => "Avis was created."));
+        // Si besoin de récuperer un message pour confirmation
+        echo json_encode(array($msg => "Votre avis a bien été partagé."));
     }
 
-    // if unable to create the avis, tell the user
+    // Si erreur
     else{
 
-        // set response code - 503 service unavailable
+        // code 503 si erreur
         http_response_code(503);
 
-        // tell the user
-        echo json_encode(array($msg => "Unable to create avis."));
+        // Si besoin de récuperer un message pour voir l'erreur
+        echo json_encode(array($msg => "Impossible de créer l'avis."));
     }
 }
 
-// tell the user data is incomplete
+// Si les données sont incomplètes
 else{
 
-    // set response code - 400 bad request
+    // code 400 pour mauvaise requête
     http_response_code(400);
 
-    // tell the user
-    echo json_encode(array($msg => "Unable to create avis. Data is incomplete."));
+    // Si besoin de récuperer un message pour voir l'erreur
+    echo json_encode(array($msg => "Impossible de créer l'avis. Les données sont incomplètes."));
 }
 ?>

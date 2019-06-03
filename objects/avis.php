@@ -1,11 +1,11 @@
 <?php
 class Avis{
 
-    // database connection and table name
+    // connexion à la base + nom de la table
     private $conn;
 
 
-    // object properties
+    // Propriétés des objets
     public $name;
     public $description;
     public $created;
@@ -13,12 +13,12 @@ class Avis{
     public $modified;
     public $desc='description';
 
-    // constructor with $db as database connection
+    //construction de la bd
     public function __construct($db){
         $this->conn = $db;
     }
 
-    // read products
+    // lire les produits
     function read(){
 
          $stmt = $this->conn->prepare("SELECT * FROM avis");
@@ -26,7 +26,7 @@ class Avis{
 
         return $stmt;
     }
-    // create product
+    // créer les produits
 
     function create(){
           $this->name=htmlspecialchars(strip_tags($this->name));
@@ -49,10 +49,10 @@ class Avis{
       return false;
 
     }
-    // used when filling up the update product form
+    // lire un produit
 function readOne(){
 
-  // sanitize
+  // enelver les caractères pouvant poser problème
   $this->name=htmlspecialchars(strip_tags($this->name));
   $this->description=htmlspecialchars(strip_tags($this->description));
   $this->avis_id=htmlspecialchars(strip_tags($this->avis_id));
@@ -62,12 +62,11 @@ function readOne(){
   $stmt = $this->conn->prepare("SELECT * FROM avis where avis_id=:id");
   $stmt->execute(array('id' => $this->avis_id));
 
-    // get retrieved row
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
 
-    // set values to object properties
+    // donner les valeurs aux attributs
     $this->name = $row['name'];
     $this->description = $row['description'];
     $this->avis_id = $row['avis_id'];
@@ -82,13 +81,10 @@ function readLast(){
   $stmt = $this->conn->prepare("SELECT * FROM avis where avis_id in (SELECT MAX(avis_id) from avis)");
   $stmt->execute();
 
-    // get retrieved row
+
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
-
-    // set values to object properties
-    //$desc='description';
     $this->name = $row['name'];
     $this->description = $row[$this->desc];
     $this->avis_id = $row['avis_id'];
@@ -101,16 +97,13 @@ function readLast(){
 function update(){
 
 
-    // update query
+    // mettre à jour
     $stmt = $this->conn->prepare("UPDATE avis SET name = :name, description = :description WHERE avis_id = :id");
     $exec=$stmt->execute(array(
       'id' => $this->avis_id,
       $this->desc => $this->description,
       'name'=> $this->name
     ));
-
-
-    // execute the query
     if($exec){
         return true;
     }
@@ -118,7 +111,7 @@ function update(){
     return false;
 }
 
-// delete the product
+// suppression du produit
 function delete(){
 
     // delete query
