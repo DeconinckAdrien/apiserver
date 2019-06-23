@@ -30,7 +30,7 @@ if($avis->delete()){
     http_response_code(200);
 
     // tell the user
-    echo json_encode(array("message" => "Avis was deleted."));
+    echo json_encode(array("message" => "Événement supprimé"));
 }
 
 // if unable to delete the avis
@@ -40,6 +40,6 @@ else{
     http_response_code(503);
 
     // tell the user
-    echo json_encode(array("message" => "Unable to delete avis."));
+    echo json_encode(array("message" => "Impossible de supprimer l'évènement"));
 }
 ?>

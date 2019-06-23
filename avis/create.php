@@ -1,14 +1,15 @@
 <?php
-// en-têtes nécessaires
+// required headers
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-// récupérer la connexion à la base de données
+// get database connection
 include_once '../config/database.php';
 
+// instantiate avis object
 include_once '../objects/avis.php';
 
 $database = new Database();
@@ -16,46 +17,46 @@ $db = $database->getConnection();
 $msg="message";
 $avis = new Avis($db);
 
-// récupérer les données postées
-$data = json_decode(file_get_contents("php://input"));
+// get posted data
+$data = json_decode(file_get_contents("php://input"));// make sure data is not empty
 if(
     !empty($data->name) &&
     !empty($data->description)
 ){
 
-    // donner les valeurs aux propriétés de l'avis
+    // set avis property values
     $avis->name = $data->name;
     $avis->description = $data->description;
     $avis->created = date('Y-m-d H:i:s');
 
-    // créer l'avis
+    // create the avis
     if($avis->create()){
 
-        // code 201 si avis créé
+        // set response code - 201 created
         http_response_code(201);
 
-        // Si besoin de récuperer un message pour confirmation
-        echo json_encode(array($msg => "Votre avis a bien été partagé."));
+        // tell the user
+        echo json_encode(array($msg => "Événement partagé"));
     }
 
-    // Si erreur
+    // if unable to create the avis, tell the user
     else{
 
-        // code 503 si erreur
+        // set response code - 503 service unavailable
         http_response_code(503);
 
-        // Si besoin de récuperer un message pour voir l'erreur
-        echo json_encode(array($msg => "Impossible de créer l'avis."));
+        // tell the user
+        echo json_encode(array($msg => "Erreur lors du partage de l'événement"));
     }
 }
 
-// Si les données sont incomplètes
+// tell the user data is incomplete
 else{
 
-    // code 400 pour mauvaise requête
+    // set response code - 400 bad request
     http_response_code(400);
 
-    // Si besoin de récuperer un message pour voir l'erreur
-    echo json_encode(array($msg => "Impossible de créer l'avis. Les données sont incomplètes."));
+    // tell the user
+    echo json_encode(array($msg => "Erreur lors du partage de l'événement. Données incomplètes."));
 }
 ?>

@@ -34,7 +34,7 @@ if($avis->update()){
     http_response_code(200);
 
     // tell the user
-    echo json_encode(array("message" => "Avis was updated."));
+    echo json_encode(array("message" => "L'événement a été mis à jour"));
 }
 
 // if unable to update the avis, tell the user
@@ -44,6 +44,6 @@ else{
     http_response_code(503);
 
     // tell the user
-    echo json_encode(array("message" => "Unable to update avis."));
+    echo json_encode(array("message" => "Impossible de mettre à jour l'avis"));
 }
 ?>
