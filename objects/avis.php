@@ -1,7 +1,7 @@
 <?php
 class Avis{
 
-    // database connection and table name
+    // variable base de données
     private $conn;
 
 
