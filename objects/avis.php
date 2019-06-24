@@ -1,9 +1,9 @@
 <?php
 class Avis{
 
-    // database connection and table name
+    // connection à la base de données 
     private $conn;
-
+   
 
     // object properties
     public $name;
